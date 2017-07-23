@@ -1,0 +1,20 @@
+{
+    "name": "morse-pro",
+    "version": "1.0.0",
+    "description": "Library for manipulating Morse code text and sound. Understands prosigns and Farnsworth speed. Can create WAV files and analyse input from the microphone or audio files.",
+    "keywords": ["morse code", "decoder", "wav file", "microphone", "sound file", "adaptive", "keyer", "iambic", "prosigns"],
+    "license": "EUPL-1.2",
+    "homepage": "https://morsecode.scphillips.com",
+    "author": {
+        "name": "Stephen C Phillips",
+        "email": "steve@scphillips.com",
+        "url": "http://scphillips.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/scp93ch/morse-pro.git"
+    },
+    "bugs": {
+        "url": "https://github.com/scp93ch/morse-pro/issues"
+    }
+}
