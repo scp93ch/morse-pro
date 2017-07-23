@@ -46,9 +46,9 @@ Library overview:
 * [morse-pro-message.js](./morse-pro-message.js): MorseMessage class, for conveniently translating to and from Morse code and dealing with errors.
 * [morse-pro-cw.js](./morse-pro-cw.js): MorseCW class, to create the on/off timings needed by e.g. sound generators. Understands speed and Farnsworth speed concepts. Extends MorseMessage class.
 * [morse-pro-cw-wave.js](./morse-pro-cw-wave.js): MorseCWWave class, to create sine-wave samples of standard CW Morse. Extends MorseCW.
-* [morse-player-xas.js](./morse-player-xas.js): MorsePlayerXAS class, to play sounds in older web browsers (e.g. IE) using XAudioJS. Can play MorseCWWave instances.
-* [morse-player-waa.js](./morse-player-waa.js): MorsePlayerWAA class, to play sounds in a web browser using the Web Audio API. Can play MorseCWWave instances.
-* [morse-player-waa-light.js](./morse-player-waa-light.js): MorsePlayerWAALight class. Extends MorsePlayerWAA to provide callbacks when the sound goes on or off and when the sound ends.Can be used to turn a light on or off in time with the Morse sound.
+* [morse-pro-player-xas.js](./morse-pro-player-xas.js): MorsePlayerXAS class, to play sounds in older web browsers (e.g. IE) using XAudioJS. Can play MorseCWWave instances.
+* [morse-pro-player-waa.js](./morse-pro-player-waa.js): MorsePlayerWAA class, to play sounds in a web browser using the Web Audio API. Can play MorseCWWave instances.
+* [morse-pro-player-waa-light.js](./morse-pro-player-waa-light.js): MorsePlayerWAALight class. Extends MorsePlayerWAA to provide callbacks when the sound goes on or off and when the sound ends.Can be used to turn a light on or off in time with the Morse sound.
 * [morse-pro-decoder.js](./morse-pro-decoder.js): MorseDecoder class which converts from timings to Morse code.
 * [morse-pro-decoder-adaptive.js](./morse-pro-decoder-adaptive.js): MorseDecoderAdaptive class, converts from timings to Morse code and adapts to changing speed.
 * [morse-pro-keyer.js](./morse-pro-keyer.js): MorseKeyer class, tests for input (e.g. from the keyboard) using a timer, plays the appropriate tone and passes the data to a MorseDecoder instance.
