@@ -39,7 +39,7 @@ If you would like to access this software under a different licence then please 
 
 # Documentation
 
-Documentation on how to use the library is embedded in the source code.
+Documentation on how to use the library is embedded in the source code and can be found [at the ESDoc site](https://doc.esdoc.org/github.com/scp93ch/morse-pro/).
 
 Library overview:
 * [morse-pro.js](./src/morse-pro.js): Basic functions to translate Morse code. Includes mapping of characters and prosigns to dots and dashes.
