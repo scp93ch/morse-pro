@@ -12,37 +12,30 @@ See the Licence for the specific language governing permissions and limitations 
 import * as WPM from 'morse-pro-wpm';
 import MorseDecoder from 'morse-pro-decoder';
 
-/*
-    Class to convert from timings to Morse code. Adapts to changing speed.
-
-    Arguments:
-        wpm             See MorseDecoder
-        fwpm            See MorseDecoder
-        bufferSize      Size of the buffer to average over (defaults to 30)
-        messageCallback See MorseDecoder
-        speedCallback   See MorseDecoder; the speed is changed automatically by this class so the callback is more use.
-
-    Usage:
-
-    var messageCallback = function(data) {
-        console.log(data);
-    };
-    var speedCallback = function(s) {
-        console.log('Speed is now: ' + s.wpm + ' WPM');
-    };
-    var decoder = new MorseAdaptiveDecoder(10);
-    decoder.messageCallback = messageCallback;
-    decoder.speedCallback = speedCallback;
-    var t;
-    while (decoder_is_operating) {
-        // get some timing "t" from a sensor, make it +ve for noise and -ve for silence
-        decoder.addTiming(t);
-    }
-    decoder.flush();  // make sure all the data is pushed through the decoder
-
-*/
-
+/**
+ * Class to convert from timings to Morse code. Adapts to changing speed.
+ *
+ * @example
+ * var messageCallback = function(data) {
+ *     console.log(data);
+ * };
+ * var speedCallback = function(s) {
+ *     console.log('Speed is now: ' + s.wpm + ' WPM');
+ * };
+ * var decoder = new MorseAdaptiveDecoder(10);
+ * decoder.messageCallback = messageCallback;
+ * decoder.speedCallback = speedCallback;
+ * var t;
+ * while (decoder_is_operating) {
+ *     // get some timing "t" from a sensor, make it +ve for noise and -ve for silence
+ *     decoder.addTiming(t);
+ * }
+ * decoder.flush();  // make sure all the data is pushed through the decoder
+ */
 export default class MorseAdaptiveDecoder extends MorseDecoder {
+    /**
+     * @param {number} [bufferSize=30] - Size of the buffer to average over
+     */
     constructor(wpm, fwpm, bufferSize = 30, messageCallback = undefined, speedCallback = undefined) {
         super(wpm, fwpm, messageCallback, speedCallback);
         this.bufferSize = bufferSize;
@@ -51,6 +44,10 @@ export default class MorseAdaptiveDecoder extends MorseDecoder {
         this.lockSpeed = false;
     }
 
+    /**
+     * @override
+     * @access private
+     */
     addDecode(duration, character) {
         super.addDecode(duration, character);
 

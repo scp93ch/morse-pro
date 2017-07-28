@@ -10,20 +10,16 @@
 * Public Domain
 */
 
-/*
-    Utility to create RIFF WAVE file data.
-
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-    import * as RiffWave from 'morse-pro-util-riffwave';
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-
-    var wav = RiffWave.getData(morseCWWave);  // returns byte array of WAV file
-*/
-
+/**
+ * Utility to create RIFF WAVE file data.
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * import * as RiffWave from 'morse-pro-util-riffwave';
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var wav = RiffWave.getData(morseCWWave);  // returns byte array of WAV file
+ */
 var u32ToArray = function(i) {
     return [i&0xFF, (i>>8)&0xFF, (i>>16)&0xFF, (i>>24)&0xFF];
 };
@@ -43,16 +39,15 @@ var split16bitArray = function(data) {
     return r;
 };
 
-/*
-Convert PCM data to WAV file data.
-Arguments:
-    - a MorseCWWave instance
-    - bits-per-sample (8 or 16), optional, default is 8.
-*/
-export function getData(morseCWWave, bitsPerSample) {
+/**
+ * Convert PCM data to WAV file data.
+ * @param {Object} morseCWWave - a MorseCWWave instance
+ * @param {number} bitsPerSample - number of bits to use per sample (8 or 16), default is 8
+ * @return {number[]}
+ */
+export function getData(morseCWWave, bitsPerSample = 8) {
     var data = morseCWWave.getPCMSample();
     var sampleRate = morseCWWave.sampleRate;
-    bitsPerSample = bitsPerSample || 8;
 
     var header = {                            // OFFS SIZE NOTES
         chunkId      : [0x52,0x49,0x46,0x46], // 0    4    "RIFF" = 0x52494646

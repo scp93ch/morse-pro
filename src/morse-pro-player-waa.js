@@ -9,22 +9,18 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-/*
-    Web browser sound player using Web Audio API.
-
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-    import MorsePlayerWAA from 'morse-pro-player-waa';
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-
-    var morsePlayerWAA = new MorsePlayerWAA();
-    morsePlayerWAA.loadCWWave(morseCWWave);
-    morsePlayerWAA.playFromStart();
-*/
-
+/**
+ * Web browser sound player using Web Audio API.
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * import MorsePlayerWAA from 'morse-pro-player-waa';
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var morsePlayerWAA = new MorsePlayerWAA();
+ * morsePlayerWAA.loadCWWave(morseCWWave);
+ * morsePlayerWAA.playFromStart();
+ */
 export default class MorsePlayerWAA {
     constructor() {
         console.log("Trying Web Audio API (Oscillators)");
@@ -40,6 +36,9 @@ export default class MorsePlayerWAA {
         this.frequency = undefined;
     }
 
+    /**
+     * @access: private
+     */
     initialiseAudioNodes() {
         this.audioContext = new this.audioContextClass();
         this.splitterNode = this.audioContext.createGain();  // this is here to attach other nodes to in subclass
@@ -65,7 +64,10 @@ export default class MorsePlayerWAA {
         }
     }
 
-    // Convenience method to help playing directly from a MorseCWWave instance.
+    /**
+     * Convenience method to help playing directly from a MorseCWWave instance.
+     * @param {Object} cwWave - a MorseCWWave instance
+     */
     loadCWWave(cwWave) {
         this.load(cwWave.getTimings(), cwWave.frequency);
     }

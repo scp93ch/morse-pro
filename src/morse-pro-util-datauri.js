@@ -10,19 +10,17 @@
 * Public Domain
 */
 
-/*
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-    import getDataURI from 'morse-pro-util-datauri';
-    import * as RiffWave from 'morse-pro-util-riffwave';
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-
-    var audio = new Audio(getDataURI(RiffWave.getData(morseCWWave), RiffWave.getMIMEType())); // create an HTML5 audio element
-*/
-
+/**
+ * Function to create a data URI.
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * import getDataURI from 'morse-pro-util-datauri';
+ * import * as RiffWave from 'morse-pro-util-riffwave';
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var audio = new Audio(getDataURI(RiffWave.getData(morseCWWave), RiffWave.getMIMEType())); // create an HTML5 audio element
+ */
 var Base64 = {
 
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -64,6 +62,11 @@ var Base64 = {
 };
 Base64.init();
 
+/**
+ * @param {number[]} data - list of bytes to encode
+ * @param {string} type - MIME-type of the data
+ * @return {string}
+ */
 export default function getDataURI(data, type) {
     return 'data:' + type + ';base64,' + Base64.encode(data);
 }

@@ -13,19 +13,37 @@ import * as WPM from 'morse-pro-wpm';
 import MorseDecoder from 'morse-pro-decoder';
 import MorsePlayerWAA from 'morse-pro-player-waa';
 
-/*
-    The Morse keyer tests for input on a timer, plays the appropriate tone and passes the data to a decoder.
-
-    Arguments:
-        keyCallback         A function which should return {0, 1, 2, 3} from the vitual "paddle" depending if nothing, a dit, a dah or both is detected.
-                            This implementation will play dits if both keys are detected.
-        wpm                 Speed of the keyer (defaults to 20 WPM).
-        frequency           The frequency in Hz for the sidetone (defaults to 550 Hz).
-        messageCallback     A function which receives a dictionary with keys 'message', 'timings' and 'morse' for each decoded part (see MorseDecoder).
-                            Its use here will result in a single character being returned each time.
-*/
-
+/**
+ * The Morse keyer tests for input on a timer, plays the appropriate tone and passes the data to a decoder.
+ *
+ * @example
+ * var ditKey = 90;  // Z
+ * var dahKey = 88;  // X
+ * window.onkeyup = function(e) {
+ *     if (e.keyCode === ditKey) { dit = false; }
+ *     if (e.keyCode === dahKey) { dah = false; }
+ * };
+ * window.onkeydown = function(e) {
+ *     var wasMiddle = !dit & !dah;
+ *     if (e.keyCode === ditKey) { dit = true; }
+ *     if (e.keyCode === dahKey) { dah = true; }
+ *     if (wasMiddle & (dit | dah)) { keyer.start(); }
+ * };
+ * var keyCallback = function() {
+ *     return ((dit === true) * 1) + ((dah === true) * 2);
+ * };
+ * var messageCallback = function(d) {
+ *     console.log(d.message);
+ * };
+ * keyer = new MorseKeyer(keyCallback, 20, 550, messageCallback);
+ */
 export default class MorseKeyer {
+    /**
+     * @param {function(): number} keyCallback - A function which should return 0, 1, 2, or 3 from the vitual "paddle" depending if nothing, a dit, a dah or both is detected. This implementation will play dits if both keys are detected.
+     * @param {number} [wpm=20] - Speed of the keyer.
+     * @param {number} [frequency=550] - The frequency in Hz for the sidetone.
+     * @param {function(dict: {message: string, timings: number[], morse: string})} messageCallback - A function which receives a dictionary with keys 'message', 'timings' and 'morse' for each decoded part (see MorseDecoder). Its use here will result in a single character being returned each time.
+     */
     constructor(keyCallback, wpm = 20, frequency = 550, messageCallback = undefined) {
         this.keyCallback = keyCallback;
         this.wpm = wpm;
@@ -40,6 +58,9 @@ export default class MorseKeyer {
         this.playing = false;
     }
 
+    /**
+     * @access: private
+     */
     check() {
         var input = this.keyCallback();
         var dit;
@@ -73,6 +94,9 @@ export default class MorseKeyer {
         return input;
     }
 
+    /**
+     * @access: private
+     */
     ditOrDah(input) {
         var dit;
         if (input & 1) {
@@ -83,9 +107,9 @@ export default class MorseKeyer {
         return dit;
     }
 
-    /*
-        Call this method when a key-press (or equivalent) is detected
-    */
+    /**
+     * Call this method when an initial key-press (or equivalent) is detected.
+     */
     start() {
         if (this.playing) {
             // If the keyer is already playing then ignore a new start.
@@ -99,17 +123,18 @@ export default class MorseKeyer {
         }
     }
 
-    /*
-        This method can be called externally to stop the keyer but is also used internally when no key-press is detected.
-    */
+    /**
+     * This method can be called externally to stop the keyer but is also used internally when no key-press is detected.
+     */
     stop() {
         this.playing = false;
         clearTimeout(this.timer);
     }
 
-    /*
-        Play a dit or dah sidetone.
-    */
+    /**
+     * Play a dit or dah sidetone.
+     * @access: private
+     */
     playTone(isDit) {
         var duration = isDit ? this.ditLen : 3 * this.ditLen;
         this.player.load([duration], this.frequency);

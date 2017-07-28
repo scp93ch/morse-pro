@@ -11,32 +11,31 @@ See the Licence for the specific language governing permissions and limitations 
 
 import * as Morse from 'morse-pro';
 
-/*
-    Class for conveniently translating to and from Morse code.
-    Deals with error handling.
-    Works out if the input is Morse code or not.
-
-    Usage:
-
-    import MorseMessage from 'morse-pro-message';
-
-    var morseMessage = new MorseMessage();
-    var input;
-    var output;
-    try {
-        output = morseMessage.translate("abc");
-    catch (ex) {
-        // input will have errors surrounded by paired '#' signs
-        // output will be best attempt at translation, with untranslatables replaced with '#'
-        morseMessage.clearError();  // remove all the '#'
-    }
-    if (morseMessage.inputWasMorse) {
-        // do something
-    }
-
-*/
-
+/**
+ * Class for conveniently translating to and from Morse code.
+ * Deals with error handling.
+ * Works out if the input is Morse code or not.
+ *
+ * @example
+ * import MorseMessage from 'morse-pro-message';
+ * var morseMessage = new MorseMessage();
+ * var input;
+ * var output;
+ * try {
+ *     output = morseMessage.translate("abc");
+ * catch (ex) {
+ *     // input will have errors surrounded by paired '#' signs
+ *     // output will be best attempt at translation, with untranslatables replaced with '#'
+ *     morseMessage.clearError();  // remove all the '#'
+ * }
+ * if (morseMessage.inputWasMorse) {
+ *     // do something
+ * }
+ */
 export default class MorseMessage {
+    /**
+     * @param {boolean} [prosigns=true] - whether or not to include prosigns in the translations
+     */
     constructor(useProsigns = true) {
         this.useProsigns = useProsigns;
         this.input = "";
@@ -47,6 +46,10 @@ export default class MorseMessage {
         this.hasError = undefined;
     }
 
+    /**
+     * @param {string} input - alphanumeric text or morse code to translate
+     * @param {boolean} isMorse - whether the input is Morse code or not (if not set then the looksLikeMorse method will be used)
+     */
     translate(input, isMorse) {
         var translation;
 
@@ -80,8 +83,9 @@ export default class MorseMessage {
         return this.output;
     }
 
-    // Clear all the errors from the morse and message.
-    // Useful if you want to play the sound even though it didn't translate.
+    /**
+     * Clear all the errors from the morse and message. Useful if you want to play the sound even though it didn't translate.
+     */
     clearError() {
         if (this.inputWasMorse) {
             this.morse = this.morse.replace(/#/g, "");  // leave in the bad Morse

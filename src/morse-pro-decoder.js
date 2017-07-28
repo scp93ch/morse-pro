@@ -12,37 +12,31 @@ See the Licence for the specific language governing permissions and limitations 
 import * as Morse from 'morse-pro';
 import * as WPM from 'morse-pro-wpm';
 
-/*
-    Class to convert from timings to Morse code.
-
-    Arguments:
-        wpm                 The speed of the Morse in words per minute (defaults to 15).
-        fwpm                The Farnsworth speed of the Morse in words per minute (defaults to wpm).
-        messageCallback     Callback executed when decoder buffer is flushed (every character). [optional]
-                            Returns dictionary with keys 'timings', 'morse' and 'message'
-        speedCallback       Callback executed if the wpm or fwpm speed changes. [optional]
-                            The speed in this class doesn't change by itself, but e.g. the fwpm can change if wpm is changed.
-                            Returned dictionary has keys 'fwpm' and 'wpm'.
-
-    Usage:
-
-    // The messageCallback is called when a character or more is decoded
-    // It receives a dictionary of the timings, morse, and the message
-    var messageCallback = function(data) {
-        console.log("Decoded: {\n  timings: " + data.timings + "\n  morse: " + data.morse + "\n  message: " + data.message + "\n}");
-    }
-    var decoder = new MorseDecoder(10);
-    decoder.messageCallback = messageCallback;
-    var t;
-    while (decoder_is_operating) {
-        // get some timing "t" from a sensor, make it +ve for noise and -ve for silence
-        decoder.addTiming(t);
-    }
-    decoder.flush();  // make sure all the data is pushed through the decoder
-
-*/
-
+/**
+ * Class to convert from timings to Morse code.
+ *
+ * @example
+ * // The messageCallback is called when a character or more is decoded
+ * // It receives a dictionary of the timings, morse, and the message
+ * var messageCallback = function(data) {
+ *     console.log("Decoded: {\n  timings: " + data.timings + "\n  morse: " + data.morse + "\n  message: " + data.message + "\n}");
+ * }
+ * var decoder = new MorseDecoder(10);
+ * decoder.messageCallback = messageCallback;
+ * var t;
+ * while (decoder_is_operating) {
+ *     // get some timing "t" from a sensor, make it +ve for noise and -ve for silence
+ *     decoder.addTiming(t);
+ * }
+ * decoder.flush();  // make sure all the data is pushed through the decoder
+ */
 export default class MorseDecoder {
+    /**
+     * @param {number} [wpm=20] - The speed of the Morse in words per minute.
+     * @param {number} [fwpm=wpm] - The Farnsworth speed of the Morse in words per minute.
+     * @param {number} [messageCallback] - Callback executed when decoder buffer is flushed (every character). Returns dictionary with keys 'timings', 'morse' and 'message'
+     * @param {number} [speedCallback] - Callback executed if the wpm or fwpm speed changes. The speed in this class doesn't change by itself, but e.g. the fwpm can change if wpm is changed. Returned dictionary has keys 'fwpm' and 'wpm'.
+    */
     constructor(wpm = 20, fwpm = wpm, messageCallback = undefined, speedCallback = undefined) {
         this._wpm = undefined;
         this._fwpm = undefined;  // farnsworth speed
@@ -64,6 +58,9 @@ export default class MorseDecoder {
         this.message = "";  // string of decoded message
     }
 
+    /**
+     * @access private
+     */
     updateThresholds() {
         this._ditDahThreshold = ((1 * this._ditLen) + (3 * this._ditLen)) / 2;
         this._dahSpaceThreshold = ((3 * this._fditLen) + (7 * this._fditLen)) / 2;
@@ -131,12 +128,13 @@ export default class MorseDecoder {
         return this._fditLen;
     }
 
-    /*
-    Add a timing in ms to the list of recorded timings.
-    The duration should be positive for a dit or dah and negative for a space.
-    If the duration is <= noiseThreshold it is assumed to be noise and is added to the previous duration.
-    If a duration is the same sign as the previous one then they are combined.
-    */
+    /**
+     * Add a timing in ms to the list of recorded timings.
+     * The duration should be positive for a dit or dah and negative for a space.
+     * If the duration is <= noiseThreshold it is assumed to be noise and is added to the previous duration.
+     * If a duration is the same sign as the previous one then they are combined.
+     * @param {number} duration - millisecond duration to add, positive for a dit or dah, negative for a space
+     */
     addTiming(duration) {
         //console.log("Received: " + duration);
         if (duration === 0) {
@@ -201,6 +199,9 @@ export default class MorseDecoder {
         });
     }
 
+    /**
+     * @access private
+     */
     timings2morse(times) {
         var ditdah = "";
         var c;
@@ -230,11 +231,17 @@ export default class MorseDecoder {
         return ditdah;
     }
 
+    /**
+     * @access private
+     */
     addDecode(duration, character) {
         this.timings.push(duration);
         this.characters.push(character);
     }
 
+    /**
+     * @access private
+     */
     getTimings(character) {
         var ret = [];
         for (var i = 0; i < this.timings.length; i++) {
@@ -245,22 +252,42 @@ export default class MorseDecoder {
         return ret;
     }
 
+    /**
+     * Get the millisecond timings of all durations determined to be dits
+     * @return {number[]}
+     */
     get dits() {
         return this.getTimings('.');
     }
 
+    /**
+     * Get the millisecond timings of all durations determined to be dahs
+     * @return {number[]}
+     */
     get dahs() {
         return this.getTimings('-');
     }
 
+    /**
+     * Get the millisecond timings of all durations determined to be dit-spaces
+     * @return {number[]}
+     */
     get ditSpaces() {
         return this.getTimings('');
     }
 
+    /**
+     * Get the millisecond timings of all durations determined to be dah-spaces
+     * @return {number[]}
+     */
     get dahSpaces() {
         return this.getTimings(' ');
     }
 
+    /**
+     * Get the millisecond timings of all durations determined to be spaces
+     * @return {number[]}
+     */
     get spaces() {
         return this.getTimings('/');
     }

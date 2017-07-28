@@ -11,29 +11,32 @@ See the Licence for the specific language governing permissions and limitations 
 
 import MorseCW from 'morse-pro-cw';
 
-/*
-    Class to create sine-wave samples of standard CW Morse.
-
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-    var sample = morseCWWave.getSample();
-*/
-
+/**
+ * Class to create sine-wave samples of standard CW Morse.
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var sample = morseCWWave.getSample();
+ */
 export default class MorseCWWave extends MorseCW {
+    /**
+     * @param {number} [frequency=550] - frequency of wave in Hz
+     * @param {number} [sampleRate=8000] - sample rate for the waveform in Hz
+     */
     constructor(useProsigns, wpm, fwpm, frequency = 550, sampleRate = 8000) {
         super(useProsigns, wpm, fwpm);
+        /** @type {number} */
         this.frequency = frequency;  // frequency of wave in Hz
+        /** @type {number} */
         this.sampleRate = sampleRate;  // sample rate for the waveform in Hz
     }
 
+    /**
+     * @return {number[]} an array of floats in range is [-1, 1] representing the wave-form, suitable for XAudioJS.
+     */
     getSample() {
-        // returns an array of floating point numbers representing the wave-form
-        // data is suitable for XAudioJS
-        // range is [-1, 1] (floating point)
         var sample = [];
         var timings = this.getTimings();
         if (timings.length === 0) {
@@ -52,9 +55,10 @@ export default class MorseCWWave extends MorseCW {
         return sample;
     }
 
+    /**
+     * @return {number[]} an array of integers in range [0, 256] representing the wave-form. 8-bit unsigned PCM format.
+     */
     getPCMSample() {
-        // convert sample to 8-bit unsigned PCM format
-        // returns array of integers (bytes) in range [128, -127]
         var pcmSample = [];
         var sample = this.getSample();
         for (var i = 0; i < sample.length; i += 1) {

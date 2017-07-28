@@ -11,30 +11,31 @@ See the Licence for the specific language governing permissions and limitations 
 
 import MorsePlayerWAA from 'morse-pro-player-waa';
 
-/*
-    Web browser sound player using Web Audio API.
-    Extends MorsePlayerWAA to provide callbacks when the sound goes on or off and when the sound ends.
-    Can be used to turn a light on or off in time with the Morse sound.
-    The callbacks have an error of +/- 2.6ms
-
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-    import MorsePlayerWAALight from 'morse-pro-player-waa-light';
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-
-    var morsePlayerWAALight = new MorsePlayerWAALight();
-    morsePlayerWAALight.soundOnCallback = lightOn;
-    morsePlayerWAALight.soundOffCallback = lightOff;
-    morsePlayerWAALight.soundStoppedCallback = soundStopped;
-    morsePlayerWAALight.volume = 0;
-    morsePlayerWAALight.loadCWWave(morseCWWave);
-    morsePlayerWAA.playFromStart();
-*/
-
+/**
+ * Web browser sound player using Web Audio API.
+ * Extends MorsePlayerWAA to provide callbacks when the sound goes on or off and when the sound ends.
+ * Can be used to turn a light on or off in time with the Morse sound.
+ * The callbacks have an error of +/- 2.6ms
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * import MorsePlayerWAALight from 'morse-pro-player-waa-light';
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var morsePlayerWAALight = new MorsePlayerWAALight();
+ * morsePlayerWAALight.soundOnCallback = lightOn;
+ * morsePlayerWAALight.soundOffCallback = lightOff;
+ * morsePlayerWAALight.soundStoppedCallback = soundStopped;
+ * morsePlayerWAALight.volume = 0;
+ * morsePlayerWAALight.loadCWWave(morseCWWave);
+ * morsePlayerWAA.playFromStart();
+ */
 export default class MorsePlayerWAALight extends MorsePlayerWAA {
+    /**
+     * @param {function()} soundOnCallback - function to call when a beep starts.
+     * @param {function()} soundOffCallback - function to call when a beep stops.
+     * @param {function()} soundStoppedCallback - function to call when the sequence stops.
+     */
     constructor(soundOnCallback, soundOffCallback, soundStoppedCallback) {
         super();
         if (soundOnCallback !== undefined) this.soundOnCallback = soundOnCallback;
@@ -44,6 +45,10 @@ export default class MorsePlayerWAALight extends MorsePlayerWAA {
         this.offCount = 0;
     }
 
+    /**
+     * @access: private
+     * @override
+     */
     initialiseAudioNodes() {
         super.initialiseAudioNodes();
         this.jsNode = this.audioContext.createScriptProcessor(256, 1, 1);
@@ -52,11 +57,17 @@ export default class MorsePlayerWAALight extends MorsePlayerWAA {
         this.splitterNode.connect(this.jsNode);
     }
 
+    /**
+     * @override
+     */
     playFromStart() {
         this.offCount = 0;
         super.playFromStart();
     }
 
+    /**
+     * @access: private
+     */
     processSound(event) {
         var input = event.inputBuffer.getChannelData(0);
         var sum = 0;
@@ -72,6 +83,10 @@ export default class MorsePlayerWAALight extends MorsePlayerWAA {
         this.wasOn = on;
     }
 
+    /**
+     * @access: private
+     * @override
+     */
     off() {
         this.offCount++;
         this.soundOffCallback();

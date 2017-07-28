@@ -9,25 +9,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-/*
-    Web browser sound player for older browsers, using XAudioJS by Grant Galitz (https://github.com/taisel/XAudioJS)
-    Pass in the XAudioServer class.
-
-    Usage:
-
-    import MorseCWWave from 'morse-pro-cw-wave';
-    import MorsePlayerXAS from 'morse-pro-player-xas';
-    // make sure XAudioJS is loaded
-
-    var morseCWWave = new MorseCWWave();
-    morseCWWave.translate("abc");
-
-    var morsePlayerXAS = new MorsePlayerXAS(XAudioServer);
-    morsePlayerXAS.load(morseCWWave);
-    morsePlayerXAS.playFromStart();
-*/
-
+/**
+ * Web browser sound player for older browsers, using XAudioJS by Grant Galitz (https://github.com/taisel/XAudioJS).
+ *
+ * @example
+ * import MorseCWWave from 'morse-pro-cw-wave';
+ * import MorsePlayerXAS from 'morse-pro-player-xas';
+ * // make sure XAudioJS is loaded
+ * var morseCWWave = new MorseCWWave();
+ * morseCWWave.translate("abc");
+ * var morsePlayerXAS = new MorsePlayerXAS(XAudioServer);
+ * morsePlayerXAS.load(morseCWWave);
+ * morsePlayerXAS.playFromStart();
+ */
 export default class MorsePlayerXAS {
+    /**
+     * @param {Object} xaudioServerClass - the XAudioServer class
+     */
     constructor(xaudioServerClass) {
         this.xaudioServerClass = xaudioServerClass;
         this.isPlayingB = false;
@@ -80,7 +78,10 @@ export default class MorsePlayerXAS {
         this.audioServer.changeVolume(0);
     }
 
-    // Convenience method to help playing directly from a MorseCWWave instance.
+    /**
+     * Convenience method to help playing directly from a MorseCWWave instance.
+     * @param {Object} cwWave - a MorseCWWave instance
+     */
     loadCWWave(cwWave) {
         this.load(cwWave.getSample(), cwWave.sampleRate);
     }

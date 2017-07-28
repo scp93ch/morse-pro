@@ -27,6 +27,10 @@ export default class MorseIambicKeyer extends MorseKeyer {
         this.ditGoesFirst = true;  // if the initial signal is 3 then alternate but play a dit first
     }
 
+    /**
+     * @override
+     * @access private
+     */
     check() {
         var input = super.check();
         if (input === 0) {
@@ -34,6 +38,9 @@ export default class MorseIambicKeyer extends MorseKeyer {
         }
     }
 
+    /**
+     * @access private
+     */
     ditOrDah(input) {
         var dit;
         if (input === 1) {
@@ -53,9 +60,9 @@ export default class MorseIambicKeyer extends MorseKeyer {
         return dit;
     }
 
-    /*
-        Call this method when a key-press (or equivalent) is detected
-    */
+    /**
+     * Call this method when a key-press (or equivalent) is detected
+     */
     start() {
         if (!this.playing) {
             this.lastWasDit = undefined;

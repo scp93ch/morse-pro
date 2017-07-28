@@ -11,14 +11,13 @@ See the Licence for the specific language governing permissions and limitations 
 
 import MorseListener from 'morse-pro-listener';
 
-/*
-    Extension of the MorseListener class which automatically adapts to the dominant frequency.
-
-    Additional arguments:
-        bufferDuration      How long in ms to look back to find the frequency with the maximum volume
-*/
-
+/**
+ * Extension of the MorseListener class which automatically adapts to the dominant frequency.
+ */
 export default class MorseAdaptiveListener extends MorseListener {
+    /**
+     * @param {number} [bufferDuration=500] - How long in ms to look back to find the frequency with the maximum volume.
+     */
     constructor(
             fftSize,
             volumeMin, volumeMax,
@@ -48,6 +47,9 @@ export default class MorseAdaptiveListener extends MorseListener {
         this.lockFrequency = false;
     }
 
+    /**
+     * @access: private
+     */
     processSound() {
         super.processSound();
 

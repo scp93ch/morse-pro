@@ -9,30 +9,30 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-/*
-    Useful constants and functions for computing the speed of Morse code.
-*/
+/**
+ * Useful constants and functions for computing the speed of Morse code.
+ */
 
-const DITS_PER_WORD = 50;  // dits in "PARIS "
-const SPACES_IN_PARIS = 19;  // 5x 3-dit inter-character spaces + 1x 7-dit space
-const MS_IN_MINUTE = 60000;  // number of milliseconds in 1 minute
+const DITS_PER_WORD = 50;  /** dits in "PARIS " */
+const SPACES_IN_PARIS = 19;  /** 5x 3-dit inter-character spaces + 1x 7-dit space */
+const MS_IN_MINUTE = 60000;  /** number of milliseconds in 1 minute */
 
-// Get the dit length in ms for a given WPM
+/** Get the dit length in ms for a given WPM */
 export function ditLength(wpm) {
     return (MS_IN_MINUTE / DITS_PER_WORD) / wpm;
 }
 
-// Get the WPM for a given dit length in ms
+/** Get the WPM for a given dit length in ms */
 export function wpm(ditLen) {
     return (MS_IN_MINUTE / DITS_PER_WORD) / ditLen;
 }
 
-// Get the Farnsworth dit length in ms for a given WPM and Farnsworth WPM
+/** Get the Farnsworth dit length in ms for a given WPM and Farnsworth WPM */
 export function fditLength(wpm, fwpm) {
     return ditLength(wpm) * ratio(wpm, fwpm);
 }
 
-// Get the dit length ratio for a given WPM and Farnsworth WPM
+/** Get the dit length ratio for a given WPM and Farnsworth WPM */
 export function ratio(wpm, fwpm) {
     // "PARIS " is 31 units for the characters and 19 units for the inter-character spaces and inter-word space
     // One unit takes 1 * 60 / (50 * wpm)
@@ -46,7 +46,7 @@ export function ratio(wpm, fwpm) {
     return (DITS_PER_WORD * wpm - (DITS_PER_WORD - SPACES_IN_PARIS) * fwpm) / (SPACES_IN_PARIS * fwpm);
 }
 
-// Get the Farnsworth WPM for a given WPM and ratio
+/** Get the Farnsworth WPM for a given WPM and ratio */
 export function fwpm(wpm, r) {
     return DITS_PER_WORD * wpm / (SPACES_IN_PARIS * r + (DITS_PER_WORD - SPACES_IN_PARIS));
 }

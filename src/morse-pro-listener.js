@@ -9,49 +9,51 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-/*
-    A class to 'listen' for Morse code from the microphone or an audio file, filter the sound and pass timings to a decoder to convert to text.
-
-    Arguments:
-        fftSize                     Size of the discrete Fourier transform to use. Must be a power of 2 >= 256 (defaults to 256).
-                                    A smaller fftSize gives better time resolution but worse frequency resolution.
-        volumeFilterMin             Sound less than this volume is ignored (in dB, defaults to -60).
-        volumeFilterMax             Sound greater than this volume is ignored (in dB, defaults to -30).
-        frequencyFilterMin          Sound less than this frequency is ignored (in Hz, defaults to 550).
-        frequencyFilterMax          Sound greater than this frequency is ignored (in Hz, defaults to 550).
-        volumeThreshold             If the volume is greater than this then the signal is taken as "on" (part of a dit or dah) (0-255, defaults to 220).
-        decoder                     An instance of a configured decoder class.
-        spectrogramCallback         Called every time fftSize samples are read. Returns a dictionary with keys:
-                                    {
-                                        frequencyData: output of the DFT (the real values including DC component)
-                                        frequencyStep: frequency resolution in Hz
-                                        timeStep: time resolution in Hz
-                                        filterBinLow: index of the lowest frequency bin being analysed
-                                        filterBinHigh: index of the highest frequency bin being analysed
-                                        filterRegionVolume: volume in the analysed region
-                                        isOn: whether the analysis detected a signal or not
-                                    }
-        frequencyFilterCallback     Called when the frequency filter parameters change. Returns a dictionary:
-                                    {
-                                        min: lowest frequency in Hz
-                                        max: highest frequency in Hz
-                                    }
-                                    The frequencies may well be different to that which is set as they are quantised.
-        volumeFilterCallback        Called when the volume filter parameters change. Returns a dictionary:
-                                    {
-                                        min: low volume (in dB)
-                                        max: high volume (in dB)
-                                    }
-                                    If the set volumes are not numeric or out of range then the callback will return in range numbers.
-        volumeThresholdCallback     Called when the volume filter threshold changes. Returns a single number.
-        micSuccessCallback          Called when the microphone has successfully been connected.
-        micErrorCallback            Called (with the error as an argument) if there is an error connecting to the microphone.
-        fileLoadCallback            Called when a file has successfully been loaded (and decoded). Returns the audioBuffer object.
-        fileErrorCallback           Called (with the error as an argument) if there is an error in decoding a file.
-        EOFCallback                 Called when the playback of a file ends.
-*/
+/**
+ * A class to 'listen' for Morse code from the microphone or an audio file, filter the sound and pass timings to a decoder to convert to text.
+ */
 
 export default class MorseListener {
+    /**
+     * @param {number} fftSize - Size of the discrete Fourier transform to use. Must be a power of 2 >= 256 (defaults to 256). A smaller fftSize gives better time resolution but worse frequency resolution.
+     * @param {number} [volumeFilterMin=-60] - Sound less than this volume (in dB) is ignored.
+     * @param {number} [volumeFilterMax=-30] - Sound greater than this volume (in dB) is ignored.
+     * @param {number} [frequencyFilterMin=550] - Sound less than this frequency (in Hz) is ignored.
+     * @param {number} [frequencyFilterMax=550] - Sound greater than this frequency (in Hz) is ignored.
+     * @param {number} [volumeThreshold=220] - If the volume is greater than this then the signal is taken as "on" (part of a dit or dah) (range 0-255).
+     * @param {Object} decoder - An instance of a configured decoder class.
+     * @param {function()} spectrogramCallback - Called every time fftSize samples are read.
+                                        Returns a dictionary:
+                                         {
+                                             frequencyData: output of the DFT (the real values including DC component)
+                                             frequencyStep: frequency resolution in Hz
+                                             timeStep: time resolution in Hz
+                                             filterBinLow: index of the lowest frequency bin being analysed
+                                             filterBinHigh: index of the highest frequency bin being analysed
+                                             filterRegionVolume: volume in the analysed region
+                                             isOn: whether the analysis detected a signal or not
+                                         }
+     * @param {function()} frequencyFilterCallback - Called when the frequency filter parameters change.
+                                        Returns a dictionary:
+                                         {
+                                             min: lowest frequency in Hz
+                                             max: highest frequency in Hz
+                                         }
+                                         The frequencies may well be different to that which is set as they are quantised.
+     * @param {function()} volumeFilterCallback - Called when the volume filter parameters change.
+                                        Returns a dictionary:
+                                         {
+                                             min: low volume (in dB)
+                                             max: high volume (in dB)
+                                         }
+                                         If the set volumes are not numeric or out of range then the callback will return in range numbers.
+     * @param {function()} volumeThresholdCallback - Called when the volume filter threshold changes. Returns a single number.
+     * @param {function()} micSuccessCallback - Called when the microphone has successfully been connected.
+     * @param {function()} micErrorCallback - Called (with the error as an argument) if there is an error connecting to the microphone.
+     * @param {function()} fileLoadCallback - Called when a file has successfully been loaded (and decoded). Returns the audioBuffer object.
+     * @param {function()} fileErrorCallback - Called (with the error as an argument) if there is an error in decoding a file.
+     * @param {function()} EOFCallback - Called when the playback of a file ends.
+     */
     constructor(
             fftSize,
             volumeFilterMin, volumeFilterMax,
@@ -176,6 +178,9 @@ export default class MorseListener {
         return this._volumeThreshold;
     }
 
+    /**
+     * @access: private
+     */
     initialiseAudioNodes() {
         // set up a javascript node (BUFFER_SIZE, NUM_INPUTS, NUM_OUTPUTS)
         this.jsNode = this.audioContext.createScriptProcessor(this.fftSize, 1, 1); // buffer size can be 256, 512, 1024, 2048, 4096, 8192 or 16384
@@ -260,9 +265,10 @@ export default class MorseListener {
         this.input = undefined;
     }
 
-    // This ScriptProcessorNode is called when it is full, we then actually look at the data in the
-    // analyserNode node to measure the volume in the frequency band of interest.
-    // We don't actually use the input or output of the ScriptProcesorNode.
+    /**
+     * This ScriptProcessorNode is called when it is full, we then actually look at the data in the analyserNode node to measure the volume in the frequency band of interest. We don't actually use the input or output of the ScriptProcesorNode.
+     * @access: private
+     */
     processSound() {
         // get the data from the analyserNode node and put into frequencyData
         this.analyserNode.getByteFrequencyData(this.frequencyData);
@@ -289,8 +295,10 @@ export default class MorseListener {
         });
     }
 
-    // Called each tick with whether the sound is judged to be on or off.
-    // If a change from on to off or off to on is detected then the number of ticks of the segment is passed to the decoder.
+    /**
+     * Called each tick with whether the sound is judged to be on or off. If a change from on to off or off to on is detected then the number of ticks of the segment is passed to the decoder.
+     * @access: private
+     */
     recordOnOrOff(soundIsOn) {
         if (this.notStarted) {
             if (!soundIsOn) {
@@ -318,8 +326,9 @@ export default class MorseListener {
         }
     }
 
-    // Flush the current ticks to the decoder.
-    // Parameter is whether the ticks represent sound (on) or not
+    /**
+     * Flush the current ticks to the decoder. Parameter is whether the ticks represent sound (on) or not.
+     */
     flush(on = this.lastSoundWasOn) {
         this.decoder.addTiming((on ? 1 : -1) * this.ticks * this.timeStep);
     }

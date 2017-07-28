@@ -9,22 +9,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-/*
-    Basic methods to translate Morse code.
-
-    text2morse(text, useProsigns)       Pass in textual message and Boolean (true for if prosigns are to be used).
-                                        Returns dictionary:
-                                        {
-                                            message: the text
-                                            morse: the morse code
-                                            hasError: boolean
-                                        }
-                                        If something in the text is untranslatable then it is surrounded by hash-signs ('#') and a hash is placed in the morse.
-    text2ditdah(text, useProsigns)      Pass in a textual message and prosign Boolean; returns Morse in the form 'Dit-dah dah-dah'.
-    morse2text(morse, useProsigns)      Pass in Morse using the characters [.-/| ] and prosign Boolean. Returns dictionary the same as text2morse().
-    looksLikeMorse(input)               Pass in text; returns a Boolean, true if it is most likely Morse code.
-*/
-
+/**
+ * Basic methods to translate Morse code.
+ */
 if (typeof(String.prototype.trim) === "undefined") {
     String.prototype.trim = function() {
         return String(this).replace(/^\s+|\s+$/g, '');
@@ -118,6 +105,13 @@ var tidyText = function(text) {
     return text;
 };
 
+/**
+ * Translate text to morse in '..- .. / --' form.
+ * If something in the text is untranslatable then it is surrounded by hash-signs ('#') and a hash is placed in the morse.
+ * @param {string} text - alphanumeric message
+ * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @return {{message: string, morse: string, hasError: boolean}}
+ */
 export function text2morse(text, useProsigns = true) {
     text = tidyText(text);
     var ret = {
@@ -166,6 +160,12 @@ export function text2morse(text, useProsigns = true) {
     return ret;
 }
 
+/**
+ * Translate text to morse in 'Dit-dit-dah dah' form.
+ * @param {string} text - alphanumeric message
+ * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @return {string}
+ */
 export function text2ditdah(text, useProsigns) {
     var ditdah = text2morse(text, useProsigns).morse; // get the dots and dashes
     ditdah = ditdah.replace(/ \/ /g, '#').replace(/ /g, '~'); // put in placeholders
@@ -189,6 +189,13 @@ var tidyMorse = function(morse) {
     return morse;
 };
 
+/**
+ * Translate morse to text.
+ * If something in the morse is untranslatable then it is surrounded by hash-signs ('#') and a hash is placed in the text.
+ * @param {string} morse - morse message using [.-_/|] characters
+ * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @return {{message: string, morse: string, hasError: boolean}}
+ */
 export function morse2text(morse, useProsigns = true) {
     morse = tidyMorse(morse);
     var ret = {
@@ -224,6 +231,11 @@ export function morse2text(morse, useProsigns = true) {
     return ret;
 }
 
+/**
+ * Determine whether a string is most likely morse code.
+ * @param {string} input - the text
+ * @return {boolean} - true if the string only contains [.-_|/]
+ */
 export function looksLikeMorse(input) {
     input = tidyMorse(input);
     if (input.match(/^[ /.-]*$/)) {
