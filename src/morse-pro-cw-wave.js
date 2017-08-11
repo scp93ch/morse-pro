@@ -9,7 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-import MorseCW from 'morse-pro-cw';
+import MorseCW from './morse-pro-cw';
 
 /**
  * Class to create sine-wave samples of standard CW Morse.

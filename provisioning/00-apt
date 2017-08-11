@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "*** Updating apt"
+#rm /var/lib/dpkg/lock
+apt-get -qq update
+#apt-get -y upgrade

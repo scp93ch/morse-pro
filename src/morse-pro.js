@@ -161,17 +161,22 @@ export function text2morse(text, useProsigns = true) {
 }
 
 /**
- * Translate text to morse in 'Dit-dit-dah dah' form.
+ * Translate text to morse in 'Di-di-dah dah.' form.
  * @param {string} text - alphanumeric message
  * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
  * @return {string}
  */
 export function text2ditdah(text, useProsigns) {
-    var ditdah = text2morse(text, useProsigns).morse; // get the dots and dashes
-    ditdah = ditdah.replace(/ \/ /g, '#').replace(/ /g, '~'); // put in placeholders
-    ditdah = ditdah.replace(/\./g, 'dit ').replace(/\-/g, 'dah '); // do the basic job
-    ditdah = ditdah.replace(/ #/g, '. ').replace(/ ~/g, ', ').replace(/ $/, '.'); // do punctuation
-    ditdah = ditdah.replace(/^d/, 'D').replace(/\. d/, '. D'); // do capitalisation
+    // TODO: deal with errors in the translation
+    var ditdah = text2morse(text, useProsigns).morse + ' '; // get the dots and dashes
+    ditdah = ditdah.replace(/\./g, 'di~').replace(/\-/g, 'dah~'); // do the basic job
+    ditdah = ditdah.replace(/~/g, '-'); // replace placeholder with dash
+    ditdah = ditdah.replace(/\- /g, ' '); // remove trailing dashes
+    ditdah = ditdah.replace(/di /g, 'dit '); // use 'dit' at end of letter
+    ditdah = ditdah.replace(/ \/ /g, ', '); // do punctuation
+    ditdah = ditdah.replace(/^d/, 'D'); // do capitalisation
+    ditdah = ditdah.replace(/ $/, ''); // remove the space we added
+    ditdah = ditdah.replace(/([th])$/, '$1.'); // add full-stop if there is anything there
     return ditdah;
 }
 

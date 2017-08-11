@@ -9,7 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-import * as Morse from 'morse-pro';
+import * as Morse from './morse-pro';
 
 /**
  * Class for conveniently translating to and from Morse code.

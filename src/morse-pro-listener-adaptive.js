@@ -9,7 +9,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the Licence for the specific language governing permissions and limitations under the Licence.
 */
 
-import MorseListener from 'morse-pro-listener';
+import MorseListener from './morse-pro-listener';
 
 /**
  * Extension of the MorseListener class which automatically adapts to the dominant frequency.
