@@ -20,7 +20,7 @@ The library can:
 * Adaptively decode to text, adjusting to the most likely speed and Farnsworth speed.
 * Decode from listening to the microphone or an audio file, adapting to the most prominent frequency.
 
-It has been written using ES6 (ECMA Script 6) with no module boilerplate. If you need it to execute in a web page then use something like webpack and babel to transpile it to an earlier version of Javascript.
+It has been written using ES6 (ECMA Script 6).
 
 # Copyright and Licence
 
