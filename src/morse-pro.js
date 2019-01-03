@@ -1,7 +1,8 @@
-/*
-This code is © Copyright Stephen C. Phillips, 2017.
+/*!
+This code is © Copyright Stephen C. Phillips, 2018.
 Email: steve@scphillips.com
-
+*/
+/*
 Licensed under the EUPL, Version 1.2 or – as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
 You may not use this work except in compliance with the Licence.
 You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/community/eupl/
@@ -12,6 +13,7 @@ See the Licence for the specific language governing permissions and limitations 
 /**
  * Basic methods to translate Morse code.
  */
+
 if (typeof(String.prototype.trim) === "undefined") {
     String.prototype.trim = function() {
         return String(this).replace(/^\s+|\s+$/g, '');
@@ -62,11 +64,14 @@ var text2morseH = {
     '\'': ".----.",
     '-': "-....-",
     '/': "-..-.",
-    '(': "-.--.-",
+    '(': "-.--.",
     ')': "-.--.-",
     '"': ".-..-.",
     '@': ".--.-.",
     '=': "-...-",
+    '&': ".-...",
+    '+': ".-.-.",
+    '!': "-.-.--",
     ' ': "/" //Not morse but helps translation
 };
 var morse2textH = {};
@@ -109,7 +114,7 @@ var tidyText = function(text) {
  * Translate text to morse in '..- .. / --' form.
  * If something in the text is untranslatable then it is surrounded by hash-signs ('#') and a hash is placed in the morse.
  * @param {string} text - alphanumeric message
- * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @param {boolean} useProsigns - true if prosigns are to be used (default is true)
  * @return {{message: string, morse: string, hasError: boolean}}
  */
 export function text2morse(text, useProsigns = true) {
@@ -161,9 +166,9 @@ export function text2morse(text, useProsigns = true) {
 }
 
 /**
- * Translate text to morse in 'Di-di-dah dah.' form.
+ * Translate text to morse in 'Di-di-dah dah' form.
  * @param {string} text - alphanumeric message
- * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @param {boolean} useProsigns - true if prosigns are to be used (default is true)
  * @return {string}
  */
 export function text2ditdah(text, useProsigns) {
@@ -180,25 +185,29 @@ export function text2ditdah(text, useProsigns) {
     return ditdah;
 }
 
+/**
+ * Canonicalise morse text.
+ * Canonical form matches [.-/ ]*, has single spaces between characters, has words separated by ' / ', and has no spaces at the start or end.
+ * A single '/' may be returned by this function.
+ * @param {string} morse - Morse code matching [.-_/| ]*
+ * @return {string} Morse code in canonical form matching [.-/ ]*
+ */
 var tidyMorse = function(morse) {
-    morse = morse.trim();
     morse = morse.replace(/\|/g, "/"); // unify the word separator
     morse = morse.replace(/\//g, " / "); // make sure word separators are spaced out
     morse = morse.replace(/\s+/g, " "); // squash multiple spaces into single spaces
     morse = morse.replace(/(\/ )+\//g, "/"); // squash multiple word separators
-    //morse = morse.replace(/^ \/ /, "");  // remove initial word separators
-    //morse = morse.replace(/ \/ $/, "");  // remove trailing word separators
-    morse = morse.replace(/^\s+/, "");
-    morse = morse.replace(/\s+$/, "");
     morse = morse.replace(/_/g, "-"); // unify the dash character
+    morse = morse.replace(/^\s+/, "");  // remove initial whitespace
+    morse = morse.replace(/\s+$/, "");  // remove trailing whitespace
     return morse;
 };
 
 /**
- * Translate morse to text.
+ * Translate morse to text. Canonicalise the morse first.
  * If something in the morse is untranslatable then it is surrounded by hash-signs ('#') and a hash is placed in the text.
- * @param {string} morse - morse message using [.-_/|] characters
- * @param {Boolean} useProsigns - true if prosigns are to be used (default is true)
+ * @param {string} morse - morse message using [.-_/| ] characters
+ * @param {boolean} useProsigns - true if prosigns are to be used (default is true)
  * @return {{message: string, morse: string, hasError: boolean}}
  */
 export function morse2text(morse, useProsigns = true) {
@@ -239,13 +248,9 @@ export function morse2text(morse, useProsigns = true) {
 /**
  * Determine whether a string is most likely morse code.
  * @param {string} input - the text
- * @return {boolean} - true if the string only contains [.-_|/]
+ * @return {boolean} - true if the string only has Morse characters in after executing tidyMorse
  */
 export function looksLikeMorse(input) {
     input = tidyMorse(input);
-    if (input.match(/^[ /.-]*$/)) {
-        return true;
-    } else {
-        return false;
-    }
+    return (input.match(/^[/.-][ /.-]*$/) !== null);
 }

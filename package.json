@@ -1,6 +1,6 @@
 {
   "name": "morse-pro",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Library for manipulating Morse code text and sound. Understands prosigns and Farnsworth speed. Can create WAV files and analyse input from the microphone or audio files.",
   "keywords": [
     "morse code",
@@ -18,7 +18,7 @@
   "author": {
     "name": "Stephen C Phillips",
     "email": "steve@scphillips.com",
-    "url": "http://scphillips.com"
+    "url": "https://scphillips.com"
   },
   "repository": {
     "type": "git",
@@ -35,20 +35,27 @@
     "lib"
   ],
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-plugin-istanbul": "^4.1.4",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "coveralls": "^2.13.1",
-    "cross-env": "^5.0.5",
-    "esdoc": "^0.5.2",
-    "mocha": "^3.5.0",
-    "nyc": "^11.1.0",
-    "rimraf": "^2.6.1"
+    "babel-cli": "^6.26.0",
+    "babel-plugin-istanbul": "^5.1.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^13.0.1",
+    "rimraf": "^2.6.3"
   },
   "esdoc": {
     "source": "./src",
-    "destination": "./doc"
+    "destination": "./doc",
+    "plugins": [
+      {
+        "name": "esdoc-standard-plugin"
+      }
+    ]
   },
   "nyc": {
     "require": [
@@ -62,11 +69,12 @@
     "instrument": false
   },
   "scripts": {
-    "clean": "rimraf lib coverage",
+    "clean": "rimraf lib coverage doc",
     "prebuild": "npm run clean -s",
     "build": "babel src -d lib",
     "test": "cross-env NODE_ENV=test nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "prepublish": "npm run build"
+    "prepare": "npm run build",
+    "build-docs": "esdoc"
   }
 }

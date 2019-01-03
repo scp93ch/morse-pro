@@ -68,7 +68,7 @@ Library overview:
 
 # Tests
 
-None yet! This library is used for the software on https://morsecode.scphillips.com and is tested there.
+Some key tests are now included, see [Coveralls](https://coveralls.io/github/scp93ch/morse-pro?branch=master). This library is used for the software on https://morsecode.scphillips.com and is tested there.
 
 # Contact
 

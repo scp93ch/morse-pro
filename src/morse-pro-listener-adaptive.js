@@ -1,7 +1,8 @@
-/*
-This code is © Copyright Stephen C. Phillips, 2017.
+/*!
+This code is © Copyright Stephen C. Phillips, 2018.
 Email: steve@scphillips.com
-
+*/
+/*
 Licensed under the EUPL, Version 1.2 or – as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
 You may not use this work except in compliance with the Licence.
 You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/community/eupl/
@@ -16,6 +17,7 @@ import MorseListener from './morse-pro-listener';
  */
 export default class MorseAdaptiveListener extends MorseListener {
     /**
+     * Parameters are all the same as the MorseListener class with the addition of the bufferDuration.
      * @param {number} [bufferDuration=500] - How long in ms to look back to find the frequency with the maximum volume.
      */
     constructor(

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "*** Installing morse-pro"
+
+su -l vagrant << EOF
+    cd /vagrant
+    npm install
+EOF

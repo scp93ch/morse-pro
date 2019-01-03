@@ -1,7 +1,8 @@
-/*
-This code is © Copyright Stephen C. Phillips, 2017.
+/*!
+This code is © Copyright Stephen C. Phillips, 2018.
 Email: steve@scphillips.com
-
+*/
+/*
 Licensed under the EUPL, Version 1.2 or – as soon they will be approved by the European Commission - subsequent versions of the EUPL (the "Licence");
 You may not use this work except in compliance with the Licence.
 You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/community/eupl/
@@ -28,9 +29,9 @@ export default class MorsePlayerXAS {
      */
     constructor(xaudioServerClass) {
         this.xaudioServerClass = xaudioServerClass;
-        this.isPlayingB = false;
+        this._isPlaying = false;
         this.sample = [];
-        this.volume = 1;  // not currently settable
+        this._volume = 1;
         this.samplePos = undefined;
         this.noAudio = false;
         this.audioServer = undefined;
@@ -51,7 +52,7 @@ export default class MorsePlayerXAS {
                 that.samplePos += samplesToGenerate;
                 return ret;
             } else {
-                that.isPlayingB = false;
+                that._isPlaying = false;
                 return [];
             }
         };
@@ -64,7 +65,7 @@ export default class MorsePlayerXAS {
         setInterval(
             function () {
                 // Runs the check to see if we need to give more audio data to the lib
-                if (that.isPlayingB) {
+                if (that._isPlaying) {
                     that.audioServer.executeCallback();
                 }
             }, 20
@@ -73,8 +74,23 @@ export default class MorsePlayerXAS {
         this.load();  // create an xAudioServer so that we know if it works at all and what type it is
     }
 
+    /**
+     * Set the volume for the player
+     * @param {number} v - the volume, clamped to [0,1]
+     */
+    set volume(v) {
+        this._volume = Math.min(Math.max(v, 0), 1);
+    }
+
+    /**
+     * @returns {number} the current volume [0,1]
+     */
+    get volume() {
+        return this._volume;
+    }
+
     stop() {
-        this.isPlayingB = false;
+        this._isPlaying = false;
         this.audioServer.changeVolume(0);
     }
 
@@ -111,20 +127,20 @@ export default class MorsePlayerXAS {
 
     playFromStart() {
         this.stop();
-        this.isPlayingB = true;
+        this._isPlaying = true;
         this.samplePos = 0;
-        this.audioServer.changeVolume(this.volume);
+        this.audioServer.changeVolume(this._volume);
     }
 
     hasError() {
         return this.noAudio;
     }
 
-    isPlaying() {
-        return this.isPlayingB;
+    get isPlaying() {
+        return this._isPlaying;
     }
 
-    getAudioType() {
+    get audioType() {
         return this.audioServer.audioType;
         // 3: Audio element using media stream worker
         // 2: Flash

@@ -2,9 +2,14 @@
 
 echo "*** Installing npm etc"
 
-#https://github.com/nodesource/distributions#debinstall
-curl -sL https://deb.nodesource.com/setup_6.x | bash -
+# install NodeJS LTS
+# https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
+curl -sL https://deb.nodesource.com/setup_11.x | bash -
 apt-get install -y nodejs
 
-cd /vagrant
-npm install --save-dev mocha
+# install build-tools so that native npm addons will compile:
+apt-get install -y build-essential
+
+# update npm
+# https://www.npmjs.com/get-npm
+npm install npm@latest -g

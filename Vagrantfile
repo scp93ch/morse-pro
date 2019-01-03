@@ -7,7 +7,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "boxcutter/ubuntu1604"
+  config.vm.box = "ubuntu/xenial64"
 
   if Vagrant.has_plugin?("vagrant-cachier")
     # Configure cached packages to be shared between instances of the same base box.
@@ -17,7 +17,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.hostname = hostname
 
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", 
+    rsync__exclude: [".vagrant/", ".git/"],
+    rsync__args: ["--verbose", "--archive", "-z"]
 
   config.vm.provider "virtualbox" do |vb|
   	vb.memory = ram

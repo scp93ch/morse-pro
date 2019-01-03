@@ -49,18 +49,25 @@ describe('morse-pro', function() {
     describe('morse2text()', function() {
         var tests = [
             {args: [''], expected: {morse: '', message: '', hasError: false}},
+            {args: ['.'], expected: {morse: '.', message: 'E', hasError: false}},
             {args: ['-'], expected: {morse: '-', message: 'T', hasError: false}},
             {args: ['_'], expected: {morse: '-', message: 'T', hasError: false}},
+            {args: [' '], expected: {morse: '', message: '', hasError: false}},
+            {args: ['/'], expected: {morse: '/', message: ' ', hasError: false}},
+            {args: ['|'], expected: {morse: '/', message: ' ', hasError: false}},
+            {args: ['//'], expected: {morse: '/', message: ' ', hasError: false}},
             {args: ['...'], expected: {morse: '...', message: 'S', hasError: false}},
             {args: ['.-.-.-.-.-.-'], expected: {morse: '#.-.-.-.-.-.-#', message: '#', hasError: true}},
             {args: [' ...'], expected: {morse: '...', message: 'S', hasError: false}},
             {args: ['... '], expected: {morse: '...', message: 'S', hasError: false}},
+            {args: ['/ ...'], expected: {morse: '/ ...', message: ' S', hasError: false}},
+            {args: ['... /'], expected: {morse: '... /', message: 'S ', hasError: false}},
             {args: ['... ...'], expected: {morse: '... ...', message: 'SS', hasError: false}},
             {args: ['...  ...'], expected: {morse: '... ...', message: 'SS', hasError: false}},
             {args: ['... / ...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
-            {args: ['... | ...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
+            {args: ['...  /  ...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
             {args: ['.../...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
-            {args: ['... //| ...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
+            {args: ['... // ...'], expected: {morse: '... / ...', message: 'S S', hasError: false}},
             {args: ['.-.-'], expected: {morse: '.-.-', message: '<AA>', hasError: false}},
             {args: ['.-.-', true], expected: {morse: '.-.-', message: '<AA>', hasError: false}},
             {args: ['.-.-', false], expected: {morse: '#.-.-#', message: '#', hasError: true}},
@@ -78,7 +85,7 @@ describe('morse-pro', function() {
 
     describe('looksLikeMorse()', function() {
         var tests = [
-            {args: [''], expected: true},
+            {args: [''], expected: false},
             {args: ['.'], expected: true},
             {args: ['-/ |.'], expected: true},
             {args: ['a'], expected: false},
