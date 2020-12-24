@@ -44,6 +44,7 @@ export default class MorsePlayerWAA {
         this.frequency = undefined;
         this.startPadding = 0;  // number of ms to wait before playing first note of initial sequence
         this.endPadding = 0;  // number of ms to wait at the end of a sequence before playing the next one (or looping)
+        this.openAudioContext = undefined; // Safari requires user interaction to play audio. You can set this to an audio context opened by user interaction so that morse code can be initiated by non-user events (network or a USB keyer)
 
         this._cTimings = [];
         this._isPlaying = false;
@@ -61,7 +62,7 @@ export default class MorsePlayerWAA {
      * @access: private
      */
     _initialiseAudioNodes() {
-        this.audioContext = new this.audioContextClass();
+        this.audioContext = this.openAudioContext || new this.audioContextClass();
         this.splitterNode = this.audioContext.createGain();  // this node is here to attach other nodes to in subclass
         this.lowPassNode = this.audioContext.createBiquadFilter();
         this.lowPassNode.type = "lowpass";
@@ -235,7 +236,8 @@ export default class MorsePlayerWAA {
             clearInterval(this._timer);
             clearInterval(this._stopTimer);
             clearInterval(this._startTimer);
-            this.audioContext.close();
+            // Don't close the audio context if we have one that was set by the client, since we may not be able to play audio again after that.
+            if (this.openAudioContext == null) this.audioContext.close();
             this.soundStoppedCallback();
         }
     }
