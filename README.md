@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/npm/l/morse-pro.svg)](https://joinup.ec.europa.eu/community/eupl/home)
 [![Documentation](https://doc.esdoc.org/github.com/scp93ch/morse-pro/badge.svg)](https://doc.esdoc.org/github.com/scp93ch/morse-pro/)
 
+# Now on Gitlab
+
+This project has moved to Gitlab: https://gitlab.com/scphillips/morse-pro
+
 # Introduction
 
 This Javascript (ES6) library is for manipulating Morse code text and sound. It is the library used in the tools on [Stephen C Phillips's Morse code website](https://morsecode.scphillips.com).
